@@ -4035,7 +4035,7 @@ double val( String str ) throws BasicError{
   try{
   if( str.length() == 0 ) return 0.0;
   char c = str.charAt(0);
-  if( ( c &gt;= &apos;0&apos; &amp;&amp; c &lt;= &apos;9&apos; ) || c == &apos;.&apos; ) d = xparseDouble( str );
+  if( ( c &gt;= &apos;0&apos; &amp;&amp; c &lt;= &apos;9&apos; ) || c == &apos;.&apos; || c== &apos;+&apos; || c == &apos;-&apos; ) d = xparseDouble( str );
   else if( c == &apos;&amp;&apos; ){
     if( str.length() &lt; 2 ) return 0.0;
     char c2 = str.charAt(1);
@@ -4247,9 +4247,9 @@ din.close();
 <MainWinWidth>1024</MainWinWidth>
 <MainWinHeight>740</MainWinHeight>
 <MesgWinx0>0</MesgWinx0>
-<MesgWiny0>568</MesgWiny0>
+<MesgWiny0>0</MesgWiny0>
 <MesgWinWidth>1024</MesgWinWidth>
-<MesgWinHeight>172</MesgWinHeight>
+<MesgWinHeight>745</MesgWinHeight>
 <FileWinx0>36</FileWinx0>
 <FileWiny0>478</FileWiny0>
 <FileWinWidth>578</FileWinWidth>
@@ -4267,12 +4267,12 @@ din.close();
 <ToolBarVisible>1</ToolBarVisible>
 <ViewSourceAtCompile>0</ViewSourceAtCompile>
 <NoSourceCreate>0</NoSourceCreate>
-<JavaEditCommand>leafpad</JavaEditCommand>
+<JavaEditCommand>geany</JavaEditCommand>
 <JavaViewCommand></JavaViewCommand>
-<HelpCommand></HelpCommand>
+<HelpCommand>xdg-open ./help/manual.html</HelpCommand>
 <ApplicationType>4</ApplicationType>
-<CompileCommand0>./compile</CompileCommand0>
-<RunCommand0>./run</RunCommand0>
+<CompileCommand0>./compile_java</CompileCommand0>
+<RunCommand0>./run_java</RunCommand0>
 <GUIDesignerCommand0>java -jar guidsin.jar -java</GUIDesignerCommand0>
 <ImportFiles0> import java.awt.*;
  import java.awt.event.*;
@@ -4306,8 +4306,8 @@ class Starter{
 <ProgramStartupCode0> String[] ARGS;
 </ProgramStartupCode0>
 <NativeHelpCommand0></NativeHelpCommand0>
-<CompileCommand1>./compile_applet</CompileCommand1>
-<RunCommand1>./run_applet</RunCommand1>
+<CompileCommand1></CompileCommand1>
+<RunCommand1></RunCommand1>
 <GUIDesignerCommand1>java -jar guidsin.jar -applet</GUIDesignerCommand1>
 <ImportFiles1> import java.awt.*;
  import java.awt.event.*;
@@ -4330,8 +4330,8 @@ class Starter{
 <ProgramStartupCode1> Applet APPLET;
 </ProgramStartupCode1>
 <NativeHelpCommand1></NativeHelpCommand1>
-<CompileCommand2>./compile_cpp</CompileCommand2>
-<RunCommand2>./run_cpp</RunCommand2>
+<CompileCommand2></CompileCommand2>
+<RunCommand2></RunCommand2>
 <GUIDesignerCommand2></GUIDesignerCommand2>
 <ImportFiles2>#include &lt;stdio.h&gt;
 
@@ -4343,8 +4343,8 @@ void Startup();
  }
 </ProgramStartupCode2>
 <NativeHelpCommand2></NativeHelpCommand2>
-<CompileCommand3>./compile_cppw</CompileCommand3>
-<RunCommand3>./run_cppw</RunCommand3>
+<CompileCommand3></CompileCommand3>
+<RunCommand3></RunCommand3>
 <GUIDesignerCommand3>java -jar guidsin.jar -cpp</GUIDesignerCommand3>
 <ImportFiles3>#include &lt;stdio.h&gt;
 #include &lt;sys/stat.h&gt;
@@ -4361,8 +4361,8 @@ Startup();
 <MoveStep>8</MoveStep>
 <ImageEditCommand></ImageEditCommand>
 <CompilerFileName>javac.exe</CompilerFileName>
-<CompileCommand4>./compile_android2 A51Basic com example a51basic</CompileCommand4>
-<RunCommand4>echo no action</RunCommand4>
+<CompileCommand4>./compile_android A51Basic com example a51basic</CompileCommand4>
+<RunCommand4>./run_android Test com example test</RunCommand4>
 <GUIDesignerCommand4>java -jar guidsin.jar -android</GUIDesignerCommand4>
 <ImportFiles4>package com.example.test;
 
@@ -4402,10 +4402,10 @@ import android.widget.AbsoluteLayout;
 import android.widget.*;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
-import android.content.Intent;
-import android.net.Uri;
-
+import java.text.SimpleDateFormat;
 import android.hardware.Camera;
+import android.net.Uri;
+import android.content.Intent;
 
 public class HelloWorld extends Activity {
   public void onCreate(Bundle bundle) {
@@ -4420,46 +4420,39 @@ public class HelloWorld extends Activity {
 </ProgramStartupCode4>
 <NativeHelpCommand4>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-      package=&quot;com.example.test&quot;
-      android:versionCode=&quot;1&quot;
-      android:versionName=&quot;1.0&quot;&gt;
-    &lt;uses-sdk
-        android:minSdkVersion=&quot;3&quot;
-        android:targetSdkVersion=&quot;17&quot; /&gt;
+    package=&quot;com.example.test&quot;
+    android:versionCode=&quot;1&quot;
+    android:versionName=&quot;1.0&quot; &gt;
 
-  &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt;
-  &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt; 
-  &lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot; /&gt;
-    &lt;application
-         android:label=&quot;@string/app_name&quot;
-        android:icon=&quot;@drawable/ic_launcher&quot;
-    &gt;
-        &lt;activity android:name=&quot;HelloWorld&quot;
-                  android:label=&quot;@string/app_name&quot;&gt;
+    
+    
+  &lt;uses-permission android:name=&quot;android.permission.CAMERA&quot; /&gt; 
+  &lt;uses-feature android:name=&quot;android.hardware.camera&quot; /&gt; 
+  &lt;uses-feature android:name=&quot;android.hardware.usb.host&quot; /&gt; 
+  &lt;uses-permission android:name=&quot;android.permission.RECORD_AUDIO&quot;/&gt;
+  &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; /&gt; 
+  &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot;/&gt;
+
+  &lt;uses-sdk android:minSdkVersion=&quot;3&quot; android:targetSdkVersion=&quot;21&quot;/&gt;
+  
+ 
+    &lt;application android:label=&quot;@string/app_name&quot; &gt;
+        &lt;activity
+            android:name=&quot;HelloWorld&quot;
+            android:label=&quot;@string/app_name&quot; &gt;
             &lt;intent-filter&gt;
                 &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+
                 &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
-            &lt;/intent-filter&gt;
-            &lt;intent-filter&gt;
-                &lt;action android:name=&quot;android.intent.action.VIEW&quot; /&gt;
-                &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;
-                &lt;data android:mimeType=&quot;*/*&quot; /&gt;
-                &lt;data android:scheme=&quot;file&quot; /&gt;
-                &lt;data android:host=&quot;*&quot; /&gt;
-                &lt;data android:pathPattern=&quot;.*\\.bas&quot; /&gt;
-            &lt;/intent-filter&gt;
-            &lt;intent-filter&gt;
-                &lt;action android:name=&quot;android.intent.action.VIEW&quot; /&gt;
-                &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;
-                &lt;data android:scheme=&quot;file&quot; android:host=&quot;*&quot; android:pathPattern=&quot;.*\\.bas&quot; /&gt;
             &lt;/intent-filter&gt;
         &lt;/activity&gt;
     &lt;/application&gt;
-&lt;/manifest&gt; 
+
+&lt;/manifest&gt;
 </NativeHelpCommand4>
 <HtmlEditCommand></HtmlEditCommand>
 <CompileCommand5></CompileCommand5>
-<RunCommand5>java -jar basic.jar test.bas</RunCommand5>
+<RunCommand5></RunCommand5>
 <GUIDesignerCommand5></GUIDesignerCommand5>
 <ImportFiles5></ImportFiles5>
 <ProgramStartupCode5>gosub @_PSTART
@@ -4503,5 +4496,13 @@ int main( int argc, char** argv ){
 }
 </ProgramStartupCode6>
 <NativeHelpCommand6></NativeHelpCommand6>
+<IDF_LocalVariable5>\</IDF_LocalVariable5>
+<IDF_LocalVariable7>\</IDF_LocalVariable7>
+<CompileCommand7></CompileCommand7>
+<RunCommand7></RunCommand7>
+<GUIDesignerCommand7></GUIDesignerCommand7>
+<ImportFiles7></ImportFiles7>
+<ProgramStartupCode7></ProgramStartupCode7>
+<NativeHelpCommand7></NativeHelpCommand7>
 </プロパティ>
 </xobject>
