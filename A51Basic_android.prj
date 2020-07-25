@@ -4442,8 +4442,15 @@ public class HelloWorld extends Activity {
             android:label=&quot;@string/app_name&quot; &gt;
             &lt;intent-filter&gt;
                 &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
-
                 &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.VIEW&quot; /&gt;
+                &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;
+                &lt;data android:mimeType=&quot;*/*&quot; /&gt;
+                &lt;data android:scheme=&quot;file&quot; /&gt;
+                &lt;data android:host=&quot;*&quot; /&gt;
+                &lt;data android:pathPattern=&quot;.*\\.bas&quot; /&gt;
             &lt;/intent-filter&gt;
         &lt;/activity&gt;
     &lt;/application&gt;
