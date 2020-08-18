@@ -985,7 +985,7 @@ LABEL;disp;null;2;37;716;488;255;255;255;0;0;0;Monospaced;16;null;2;1;1;1;1;Text
 <y0>13</y0>
 <width>231</width>
 <height>24</height>
-<codetext>//A-51Basicインタプリタver 0.3.2
+<codetext>//A-51Basicインタプリタver 0.3.3
 
 
 // Basic処理系
@@ -1230,7 +1230,7 @@ int          NetStat;
 
 BasicThread  ThreadBasic = null;
 
-String       Fname0 = null;
+BufferedReader   BasicFile = null;
 boolean      is_first = true;
 
 
@@ -1274,8 +1274,21 @@ public void startBasic(){
   is_first = true;
   Intent intent = ACTIVITY.getIntent();
   Uri uri = intent.getData();
-  if( uri == null )  Fname0 = intent.getStringExtra(&quot;PATH&quot;);
-  else { Fname0= uri.toString().substring(7);}
+  if( uri == null ){
+    String fname = intent.getStringExtra(&quot;PATH&quot;);
+    if( fname != null ){
+      try{
+        BasicFile = new BufferedReader( new FileReader( fname ) );
+      } catch(Exception e ){}
+    }
+  }
+  else { 
+    try {
+      URL url = new URL( uri.toString() );
+      InputStream in = url.openStream();
+      BasicFile = new BufferedReader(new InputStreamReader(in));
+    } catch(Exception e ){}
+  }
   CalcStack = new Value[STACK_SIZE];
   GosubStack = new GOSUBSF[STACK_SIZE];
   ForStack = new FORSF[STACK_SIZE];
@@ -1298,11 +1311,11 @@ class BasicThread extends Thread{
 
   public void run(){
 
-    if( Fname0 != null ){
+    if( BasicFile != null ){
       if( !is_first ) System.exit(0);
       is_first = false;
       try{
-        load_basic( Fname0 );
+        load_basic0( BasicFile );
         run_basic( TopProg );
         System.exit(0);
       } catch( BasicError e ){ System.exit(0); }
@@ -1409,6 +1422,32 @@ void load_basic( String fname ) throws BasicError{
      }
     din.close();
   } catch( IOException ie ){ assertError(&quot;ファイル\&quot;&quot; + fname + &quot;\&quot;がロードできません&quot; ); }
+}
+
+
+// Basicプログラムをロードする
+void load_basic0( BufferedReader din ) throws BasicError{
+  String line;
+  int lbl;
+  Program prog = new Program();
+
+  cmd_new();
+  CurrentLineNo = 1;
+  try{
+    while( ( line = din.readLine() ) != null ){
+      lbl = checkSum( line );
+
+      if( TopProg == null ){  // プログラムが空の場合
+        TopProg = EndProg = new Program( CurrentLineNo++, line+&quot;\r&quot;, lbl, null, null );
+        }
+      else{
+        prog = new Program( CurrentLineNo++, line+&quot;\r&quot;, lbl, EndProg, null );
+        EndProg.next = prog;
+        EndProg = prog;
+       }
+     }
+    din.close();
+  } catch( IOException ie ){ assertError(&quot;Basicファイルがロードできません&quot; ); }
 }
 
 
@@ -4444,10 +4483,11 @@ public class HelloWorld extends Activity {
                 &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
                 &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
             &lt;/intent-filter&gt;
-            &lt;intent-filter&gt;
+            &lt;intent-filter android:priority=&quot;100&quot; &gt;
                 &lt;action android:name=&quot;android.intent.action.VIEW&quot; /&gt;
+                &lt;action android:name=&quot;android.intent.action.EDIT&quot; /&gt;
                 &lt;category android:name=&quot;android.intent.category.DEFAULT&quot; /&gt;
-                &lt;data android:mimeType=&quot;*/*&quot; /&gt;
+                &lt;data android:mimeType=&quot;text/plain&quot; /&gt;
                 &lt;data android:scheme=&quot;file&quot; /&gt;
                 &lt;data android:host=&quot;*&quot; /&gt;
                 &lt;data android:pathPattern=&quot;.*\\.bas&quot; /&gt;
